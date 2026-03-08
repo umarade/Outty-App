@@ -1,3 +1,5 @@
+# Porduct backlog Link(Jira)  
+https://swe-emerging-software-processes-spring26.atlassian.net/jira/software/projects/SCRUM/boards/1/backlog
 # Rationale for Backlog Ordering
 The Outty Product Backlog has been ordered based on three primary engineering principles to ensure a stable development lifecycle.
 ## 1. Foundation and Security First
