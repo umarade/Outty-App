@@ -1,4 +1,5 @@
 /* global jest, test, expect, beforeEach */
+
 const request = require('supertest');
 const express = require('express');
 

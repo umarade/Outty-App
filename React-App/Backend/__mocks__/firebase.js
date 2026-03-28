@@ -1,6 +1,5 @@
 /* global jest */
 
-// Backend/__mocks__/firebase.js
 const verifyIdTokenMock = jest.fn();
 
 const admin = {

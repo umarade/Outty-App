@@ -1,4 +1,4 @@
-// middleware/auth.js
+
 const { admin, db } = require('../firebase');
 
 // Verifies the Firebase ID token from the request header

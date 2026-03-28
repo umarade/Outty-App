@@ -1,4 +1,4 @@
-// Frontend/src/components/AdminPanel.jsx
+
 import { useNavigate } from "react-router-dom";
 
 export default function AdminPanel() {
