@@ -111,7 +111,7 @@ export default function LoginScreen({ navigation }: Props) {
       const credential = GoogleAuthProvider.credential(idToken);
       await signInWithCredential(auth, credential);
       navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
-    } catch (err) {
+    } catch {
       Alert.alert('Error', 'Google Sign-In failed. Please try again.');
     }
   }

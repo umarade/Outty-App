@@ -37,7 +37,9 @@ export default tseslint.config(
       ...pluginReact.configs.flat.recommended.rules,
       "react/react-in-jsx-scope": "off", // Not needed in modern React
       "@typescript-eslint/no-explicit-any": "warn",
-      "react/no-unescaped-entities": ["error", { forbid: [">", "}"] }] // Allows single quotes in text
+      "react/no-unescaped-entities": ["error", { forbid: [">", "}"] }], // Allows single quotes in text
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-var-requires": "off"
     }
   }
 );

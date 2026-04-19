@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../types';
 
 const GREEN = '#2D9B6F';
 
@@ -41,7 +43,7 @@ const MATCHES = [
 ];
 
 export default function MatchesScreen() {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const renderItem = ({ item }: { item: typeof MATCHES[0] }) => (
     <TouchableOpacity
