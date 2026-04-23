@@ -5,12 +5,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 
-import LoginScreen from './App/screens/LoginScreen';
-import SignupScreen from './App/screens/SignupScreen';
-import DiscoverScreen from './App/screens/DiscoverScreen';
-import MatchesScreen from './App/screens/MatchesScreen';
-import ProfileScreen from './App/screens/ProfileScreen';
-import MessagingScreen from './App/screens/MessagingScreen';
+import LoginScreen from './App/client/src/screens/LoginScreen';
+import SignupScreen from './App/client/src/screens/SignupScreen';
+import DiscoverScreen from './App/client/src/screens/DiscoverScreen';
+import MatchesScreen from './App/client/src/screens/MatchesScreen';
+import ProfileScreen from './App/client/src/screens/ProfileScreen';
+import MessagingScreen from './App/client/src/screens/MessagingScreen';
 
 import { RootStackParamList, TabParamList } from './types';
 
@@ -48,7 +48,7 @@ export default function App() {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <NavigationContainer>
-                <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
+                <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="MainTabs">
                     <Stack.Screen name="Login"            component={LoginScreen} />
                     <Stack.Screen name="Signup"           component={SignupScreen} />
                     <Stack.Screen name="MainTabs"         component={TabNavigator} />

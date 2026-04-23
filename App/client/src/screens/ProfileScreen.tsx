@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, Platform, TextInput, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../../types';
@@ -38,6 +38,12 @@ export default function ProfileScreen() {
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editBio, setEditBio] = useState('');
+  const [editLocation, setEditLocation] = useState('');
+  const [editInterests, setEditInterests] = useState('');
+
   useEffect(() => {
     fetch(`http://localhost:3000/api/profile/${uid}`)
         .then(res => res.json())
@@ -60,6 +66,40 @@ export default function ProfileScreen() {
 
   if (loading) {
       return<Text>Loading...</Text>;
+  }
+
+  const handleEdit = () => {
+    setEditName(profile?.name ?? '');
+    setEditBio(profile?.bio ?? '');
+    setEditLocation(profile?.location ?? '');
+    setEditInterests(profile?.interests?.join(', ') ?? '');
+    setModalVisible(true);
+  };
+
+  const handleSave = () => {
+    fetch(`http://localhost:3000/api/profile/${uid}`, {
+      method: 'PATCH',
+      headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...(editName && { name: editName }),
+          ...(editBio && { bio: editBio }),
+          ...(editLocation && { location: editLocation }),
+          ...(editInterests && { interests: editInterests.split(',').map(i => i.trim()) })
+      })
+    })
+    .then(() => {
+      return fetch(`http://localhost:3000/api/profile/${uid}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log('Updated Profile', data)
+          setProfile(data);
+          console.log('Profile updated')
+          setModalVisible(false)
+        })
+    })
+    .catch(err => console.log(err));
   }
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete your profile?')) {
@@ -84,8 +124,8 @@ export default function ProfileScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>Profile</Text>
         <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.editBtn}>
-            <Ionicons name="create-outline" size={16} color={TEXT_MAIN} style={styles.editIcon} />
+          <TouchableOpacity style={styles.editBtn} onPress = {handleEdit}>
+            <Ionicons name="create-outline" size={16} color={TEXT_MAIN} style={styles.editIcon}/>
             <Text style={styles.editBtnText}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.settingsBtn}>
@@ -104,25 +144,25 @@ export default function ProfileScreen() {
         
         <View style={styles.infoSection}>
           <Text style={styles.label}>Name</Text>
-          <Text style={styles.value}>Alex Rivers, 28</Text>
+          <Text style={styles.value}>{profile?.name}</Text>
         </View>
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Location</Text>
-          <Text style={styles.value}>Denver, CO</Text>
+          <Text style={styles.value}>{profile?.location}</Text>
         </View>
 
         <View style={styles.infoSection}>
           <Text style={styles.label}>Bio</Text>
           <Text style={styles.value}>
-            Weekend warrior seeking adventure buddies for mountain trails and good vibes.
+            {profile?.bio}
           </Text>
         </View>
 
         <View style={styles.tagSection}>
           <Text style={styles.label}>Adventures</Text>
           <View style={styles.tagContainer}>
-            {['hiking', 'backpacking', 'camping'].map((tag) => (
+            {(profile?.interests ??[]).map((tag:string) => (
               <View key={tag} style={styles.tag}>
                 <Text style={styles.tagText}>{tag}</Text>
               </View>
@@ -133,11 +173,11 @@ export default function ProfileScreen() {
         <View style={styles.row}>
           <View style={styles.halfWidth}>
             <Text style={styles.label}>Skill Level</Text>
-            <Text style={styles.value}>Intermediate</Text>
+            <Text style={styles.value}>{profile?.skillLevel}</Text>
           </View>
           <View style={styles.halfWidth}>
             <Text style={styles.label}>Attitude</Text>
-            <Text style={styles.value}>Moderate</Text>
+            <Text style={styles.value}>{profile?.attitude}</Text>
           </View>
         </View>
       </View>
@@ -161,6 +201,33 @@ export default function ProfileScreen() {
           <Text style={[styles.actionText, styles.deleteText]}>Delete Profile</Text>
         </TouchableOpacity>
       </View>
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>Edit Profile</Text>
+              
+              <Text style={styles.label}>Name</Text>
+              <TextInput style={styles.input} value={editName} onChangeText={setEditName} />
+              
+              <Text style={styles.label}>Bio</Text>
+              <TextInput style={styles.input} value={editBio} onChangeText={setEditBio} multiline />
+              
+              <Text style={styles.label}>Location</Text>
+              <TextInput style={styles.input} value={editLocation} onChangeText={setEditLocation} />
+              
+              <Text style={styles.label}>Interests (comma separated)</Text>
+              <TextInput style={styles.input} value={editInterests} onChangeText={setEditInterests} />
+              
+              <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
+                  <Text style={styles.saveBtnText}>Save</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.cancelBtn} onPress={() => setModalVisible(false)}>
+                  <Text style={styles.cancelBtnText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -201,5 +268,13 @@ const styles = StyleSheet.create({
   actionRow: { flexDirection: 'row', alignItems: 'center', padding: 16, borderRadius: 12, borderWidth: 1, borderColor: '#eee', backgroundColor: '#fff' },
   deleteAction: { marginTop: 10 },
   actionText: { marginLeft: 10, fontSize: 16, fontWeight: '500', color: TEXT_MAIN },
-  deleteText: { color: ERROR_RED }
+  deleteText: { color: ERROR_RED },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalCard: { backgroundColor: '#fff', borderRadius: 16, padding: 24, width: '90%' },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 16, color: TEXT_MAIN },
+  input: { borderWidth: 1, borderColor: '#ddd', borderRadius: 8, padding: 10, marginBottom: 12, fontSize: 15 },
+  saveBtn: { backgroundColor: GREEN, padding: 14, borderRadius: 10, alignItems: 'center', marginBottom: 8 },
+  saveBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  cancelBtn: { padding: 14, alignItems: 'center' },
+  cancelBtnText: { color: TEXT_LABEL, fontSize: 15 }
 });
