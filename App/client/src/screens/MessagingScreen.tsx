@@ -19,8 +19,9 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 
-import { db } from '../firebase';
-import { RootStackParamList } from '../../types';
+// @ts-ignore
+import { db } from '../../firebase';
+import { RootStackParamList } from '../../../../types';
 
 type Message = {
   id: string;

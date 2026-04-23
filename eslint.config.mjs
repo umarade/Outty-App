@@ -6,7 +6,7 @@ export default tseslint.config(
   tseslint.configs.recommended,
   // CONFIG FOR SERVER & TESTS
   {
-    files: ["server/**/*.js", "tests/**/*.js"],
+    files: ["App/server/**/*.js", "App/server/tests/**/*.js"],
     languageOptions: {
       sourceType: "commonjs", // Allows require()
       globals: globals.node

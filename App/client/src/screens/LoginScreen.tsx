@@ -15,8 +15,9 @@ import Svg, { Path } from 'react-native-svg';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-import { auth } from '../firebase';
-import { RootStackParamList } from '../../types';
+//@ts-ignore
+import { auth } from '../../firebase';
+import { RootStackParamList } from '../../../../types';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
