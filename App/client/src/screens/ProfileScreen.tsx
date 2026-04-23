@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../../../types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const GREEN = '#2D9B6F';
@@ -30,12 +30,49 @@ const ConnectedAccountSection = ({ username, onDisconnect }: { username: string;
 
 export default function ProfileScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  // Hardcoded uid for now - will be replaced with auth context later
+  const uid = 'user123';
+  // State to store profile data from the backend
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [profile, setProfile] = useState<any>(null);
 
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/profile/${uid}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log('Profile data:', data);
+          setProfile(data);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.log(err)
+        });
+    }, []
+  );
   const handleLogout = () => {
     navigation.reset({
       index: 0,
       routes: [{ name: 'Login' }],
     });
+  };
+
+  if (loading) {
+      return<Text>Loading...</Text>;
+  }
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete your profile?')) {
+        fetch(`http://localhost:3000/api/profile/${uid}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(() => {
+            setProfile(null);
+            navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+        })
+        .catch(err => console.log(err));
+    }
   };
 
   return (
@@ -119,7 +156,7 @@ export default function ProfileScreen() {
           <Text style={styles.actionText}>Log Out</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.actionRow, styles.deleteAction]}>
+        <TouchableOpacity style={[styles.actionRow, styles.deleteAction]} onPress={handleDelete}>
           <Ionicons name="trash-outline" size={20} color={ERROR_RED} />
           <Text style={[styles.actionText, styles.deleteText]}>Delete Profile</Text>
         </TouchableOpacity>

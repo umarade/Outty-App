@@ -9,7 +9,7 @@ import {
     ScrollView,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../../../types';
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, 'Signup'>;

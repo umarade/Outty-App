@@ -20,7 +20,7 @@ import {
 } from 'firebase/firestore';
 
 import { db } from '../firebase';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../../../types';
 
 type Message = {
   id: string;
