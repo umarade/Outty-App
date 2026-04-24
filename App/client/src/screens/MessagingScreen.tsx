@@ -19,6 +19,7 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 
+// @ts-expect-error - firebase module lacks type declarations
 import { db } from '../firebase';
 import { RootStackParamList } from '../../../../types';
 
