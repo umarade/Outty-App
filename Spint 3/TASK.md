@@ -1,1 +1,5 @@
-
+- Implemented photo upload API endpoint 
+- Implemented photo retrieval endpoint
+- Used existing Firebase Firetoresetup to store and retrieve user photos
+- Handled error cases(e.g user not found)
+- Verified data storage and retrieval from Firestore
